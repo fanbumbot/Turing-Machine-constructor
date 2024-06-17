@@ -1,0 +1,428 @@
+<SaveWarning>:
+	size_hint_x: None
+	size_hint_y: None
+	size: 400, 270
+	title: "Подтверждение замены файла"
+	BoxLayout:
+		orientation: "vertical"
+		Label:
+			padding: [20, 20, 20, 20]
+			text: "Вы уверены, что хотите заменить текущий файл новым сохранённым проектом?"
+			text_size: self.width, None
+		BoxLayout:
+			orientation: "horizontal"
+			size_hint_y: 0.3
+			Button:
+				text: "Да"
+				on_press: root.Confirm()
+			Button:
+				text: "Нет"
+				on_press: root.Cancel()
+
+<MyFileChooser>:
+	size_hint_x: None
+	size_hint_y: None
+	size: 800, 650
+	BoxLayout:
+		orientation: "vertical"
+		FileChooserIconView:
+			id: FileChooser
+			filters: [lambda folder, filename: not filename.endswith('.sys') and not filename.endswith('.tmp')]
+			on_selection:root.select(*args)
+		BoxLayout:
+			size_hint_y: 0.1
+			orientation: "horizontal"
+			TextInput:
+				id: Input
+				size_hint_x: 3.0
+				hint_text: "Введите название файла"
+			Button:
+				id: Action
+				text: ""
+				on_press: root.Action()
+			Button:
+				text: "Отмена"
+				on_press: root.dismiss()
+		Label:
+			id: Info
+			size_hint_y: 0.05
+			color: 1, 0, 0, 1
+
+<MainScreen>:
+	orientation: "vertical"
+	canvas.before:
+		Color:
+			rgba: 0.13, 0.13, 0.13, 1
+		Rectangle:
+			pos: self.pos
+			size: self.size
+
+	#Меню сверху
+	ActionBar:
+		ActionView:
+			ActionPrevious:
+				title: "Конструктор машины Тьюринга"
+				with_previous: False
+			ActionButton:
+				text: "Сохранить проект"
+				on_press: root.Save()
+			ActionButton:
+				text: "Загрузить проект"
+				on_press: root.Load()
+			ActionButton:
+				text: "Помощь"
+				on_press:root.Help()
+	GeneralField:
+		id: GeneralField
+
+<GeneralField@BoxLayout>
+	orientation: "vertical"
+	spacing: 10
+	padding: [20, 0, 20, 10]
+
+	#Основная область
+	BoxLayout:
+		orientation: "vertical"
+		size_hint_y: 1.4
+		MyTape:
+			size_hint_y: 0.5
+			id: TuringTape
+		ControlPanel
+			id: TuringControlPanel
+
+	#Таблица
+	ScrollView:
+		bar_width: 15
+		bar_margin: 1
+		scroll_type: ["bars", "content"]
+		do_scroll_x: True
+		do_scroll_y: True
+		smooth_scroll_end: 8
+		ExcelLikeTable:
+			id: TuringRules
+			cols: 1
+			width: self.minimum_width
+			height: self.minimum_height
+			size_hint_x: None
+			size_hint_y: None
+			spacing: 3
+
+<MyTape@BoxLayout>:
+	orientation: "horizontal"
+	spacing: 10
+	BoxLayout:
+		id: TapeLeft
+		orientation: "vertical"
+		Button:
+			text: "<"
+			font_size: self.width * 0.5
+		Label:
+			size_hint_y: 0.4
+	BoxLayout:
+		size_hint_x: 20
+		TapeCell:
+		TapeCell:
+		TapeCell:
+		TapeCell:
+		TapeCell:
+		TapeCell:
+		TapeCell:
+	BoxLayout:
+		id: TapeRight
+		orientation: "vertical"
+		Button:
+			text: ">"
+			font_size: self.width * 0.5
+		Label:
+			size_hint_y: 0.4
+
+<TapeCell@BoxLayout>:
+	orientation: "vertical"
+	TextInput:
+		font_size: self.height*0.7
+		halign: "center"
+		valign: "middle"
+	Label:
+		size_hint_y: 0.4
+		font_size: 30
+		text: "None"
+
+<ControlPanel@BoxLayout>:
+	orientation: "vertical"
+	Label:
+		text: "Лента"
+		size_hint_y: 0.5
+		halign: "left"
+		valign: "center"
+		text_size: self.size
+	BoxLayout:
+		orientation: "horizontal"
+		Button:
+			id: ClearTape
+			text: "Очистить ленту"
+			background_color: 1, 0, 0, 1
+		BoxLayout:
+			size_hint_x: 2
+	Label:
+		text: "Исполнитель"
+		size_hint_y: 0.5
+		halign: "left"
+		valign: "center"
+		text_size: self.size
+	BoxLayout:
+		orientation: "horizontal"
+		Button:
+			id: Run
+			text: "Запуск"
+		Button:
+			id: Step
+			text: "Шаг"
+		Button:
+			id: Reset
+			text: "Сбросить"
+	Label:
+		text: "Правила"
+		size_hint_y: 0.5
+		halign: "left"
+		valign: "center"
+		text_size: self.size
+	BoxLayout:
+		orientation: "horizontal"
+		Button:
+			id: AddSymbol
+			text: "Добавить символ"
+		Button:
+			id: AddState
+			text: "Добавить состояние"
+		Button:
+			id: ClearTable
+			text: "Очистить таблицу"
+			background_color: 1, 0, 0, 1
+	BoxLayout:
+		orientation: "horizontal"
+		size_hint_y: 0.5
+		Label:
+			size_hint_x: 0.3
+			halign: "left"
+			valign: "bottom"
+			text_size: self.size
+			text: "Таблица с правилами"
+		Label:
+			id: Info
+			halign: "right"
+			valign: "center"
+			text_size: self.size
+			color: 1, 0, 0, 1
+
+<PopupChangeSymbol>:
+	title: "Изменение символа"
+	size_hint_x: None
+	size_hint_y: None
+	size: 400, 400
+
+	BoxLayout:
+		orientation: "vertical"
+		padding: 10
+		spacing: 10
+		BoxLayout:
+			orientation: "horizontal"
+			Label:
+				text: "Введите новый символ"
+				text_size: self.size
+				halign: "left"
+				valign: "middle"
+			TextInput:
+				id: input
+		BoxLayout:
+			orientation: "horizontal"
+			Label:
+				text: "Точка останова"
+				text_size: self.size
+				halign: "left"
+				valign: "middle"
+			CheckBox:
+				id: Breakpoint
+				active: root.isBreakpoint
+		Button:
+			text: "Применить"
+			on_press: root.OnApply()
+		Button:
+			text: "Удалить символ"
+			background_color: 1, 0, 0, 1
+			on_press: root.OnDelete()
+		Label:
+			id: error
+			size_hint_y: 0.3
+
+<PopupChangeState>:
+	title: "Изменить состояние"
+	size_hint_x: None
+	size_hint_y: None
+	size: 400, 550
+
+	BoxLayout:
+		orientation: "vertical"
+		padding: 10
+		spacing: 10
+		BoxLayout:
+			orientation: "horizontal"
+			Label:
+				text: "Введите новое состояние"
+				text_size: self.size
+				halign: "left"
+				valign: "middle"
+			TextInput:
+				id: input
+		BoxLayout:
+			orientation: "horizontal"
+			Label:
+				text: "Конечное состояние"
+				text_size: self.size
+				halign: "left"
+				valign: "middle"
+			CheckBox:
+				id: StopState
+				active: root.isStopped
+		BoxLayout:
+			orientation: "horizontal"
+			Label:
+				text: "Начальное состояние"
+				text_size: self.size
+				halign: "left"
+				valign: "middle"
+			CheckBox:
+				id: InitState
+				active: root.isInit
+		BoxLayout:
+			orientation: "horizontal"
+			Label:
+				text: "Точка останова"
+				text_size: self.size
+				halign: "left"
+				valign: "middle"
+			CheckBox:
+				id: Breakpoint
+				active: root.isBreakpoint
+		Button:
+			text: "Применить"
+			on_press: root.OnApply()
+		Button:
+			text: "Удалить состояние"
+			background_color: 1, 0, 0, 1
+			on_press: root.OnDelete()
+		Label:
+			id: error
+			size_hint_y: 0.3
+
+<PopupChangeRule>:
+	title: "Изменить правило"
+	size_hint_x: None
+	size_hint_y: None
+	size: 400, 500
+
+	BoxLayout:
+		orientation: "vertical"
+		padding: 10
+		spacing: 10
+		BoxLayout:
+			Label:
+				text: "Новый символ"
+				text_size: self.size
+				halign: "left"
+				valign: "middle"
+			TextInput:
+				id: inputSymbol
+				pos_hint: {"center_x": 0.5, "center_y": 0.5}
+				height: 70
+		BoxLayout:
+			Label:
+				text: "Новое состояние"
+				text_size: self.size
+				halign: "left"
+				valign: "middle"
+			TextInput:
+				id: inputState
+				pos_hint: {"center_x": 0.5, "center_y": 0.5}
+				height: 70
+		BoxLayout:
+			Label:
+				text: "Направление\nдвижения\nкаретки"
+				text_size: self.size
+				halign: "left"
+				valign: "middle"
+			Button:
+				id: direction
+				size_hint_y: None
+				pos_hint: {"center_x": 0.5, "center_y": 0.5}
+				height: 70
+				on_press: root.NextDirection()
+		BoxLayout:
+			orientation: "horizontal"
+			Label:
+				text: "Точка останова"
+				text_size: self.size
+				halign: "left"
+				valign: "middle"
+			CheckBox:
+				id: Breakpoint
+				active: root.isBreakpoint
+		Button:
+			text: "Применить"
+			size_hint_y: None
+			height: 70
+			on_press: root.OnApply()
+		Label:
+			id: error
+			size_hint_y: 0.3
+
+<PopupAddSymbol>:
+	title: "Добавление символа"
+	size_hint_x: None
+	size_hint_y: None
+	size: 400, 400
+
+	BoxLayout:
+		orientation: "vertical"
+		padding: 10
+		spacing: 10
+		BoxLayout:
+			orientation: "horizontal"
+			Label:
+				text: "Введите символ"
+				text_size: self.size
+				halign: "left"
+				valign: "middle"
+			TextInput:
+				id: input
+		Button:
+			text: "Добавить"
+			on_press: root.OnAdd()
+		Label:
+			id: error
+			size_hint_y: 0.3
+
+<PopupAddState>:
+	title: "Добавление состояния"
+	size_hint_x: None
+	size_hint_y: None
+	size: 400, 400
+
+	BoxLayout:
+		orientation: "vertical"
+		padding: 10
+		spacing: 10
+		BoxLayout:
+			orientation: "horizontal"
+			Label:
+				text: "Введите состояние"
+				text_size: self.size
+				halign: "left"
+				valign: "middle"
+			TextInput:
+				id: input
+		Button:
+			text: "Добавить"
+			on_press: root.OnAdd()
+		Label:
+			id: error
+			size_hint_y: 0.3
